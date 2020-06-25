@@ -23,3 +23,4 @@ What doesn't work:
 * Clicking on a link from google to open in a new tab, the title seems to get stuck on google url title as the page is loading (google.com&fhdsfs...) This doesn't always happen though.
 * Opening the tab list too early when an tab is being created or updating can lead to it not showing up properly. Reopening the context menu reolves this but is not ideal. 
 * There currently doesn't seem to be a way to show which tab in the list is active. I did try adding an icon but it blended in with the other site favicons. I could add some space at the front of the title of the active tab to offset it but I'm looking to see if there's a way I can inject some CSS instead.
+* Lists across multiple windows. At the moment I just end up with multiple parent menus
