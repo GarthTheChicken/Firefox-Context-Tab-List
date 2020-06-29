@@ -1,132 +1,124 @@
-//CONTEXT MENU TABS
-// VERSION 0.2
-
-getCurrentWindowTabs().then(logTabs, onError);
-
+// INIT
+listTabs();
 
 function getCurrentWindowTabs() {
   return browser.tabs.query({currentWindow: true});
 }
 
-function onError(error) {
-  console.log('Error: ${error}');
-}
-
-//var querying = browser.tabs.query({});
-
-// PARENT MENU
-browser.menus.create({
-  id: "tablist",
-  title: "Tab List",
-  contexts: ["page"]
-});
-
-
+var buttonPressed = MouseEvent.button;
+console.log("mouse button " + buttonPressed);
 // CREATE MENU
-function logTabs(tabs) {
-  for (var tab of tabs) {
+function listTabs() {
+  getCurrentWindowTabs().then((tabs) => {
 
-   var tabIdtoString = tab.id.toString();
+  for (let tab of tabs) {
+  var tabIdtoString = tab.id.toString();
 
-   if (tab.favIconUrl !=undefined){
+  if (tab.favIconUrl !=undefined){
       var favIconUrltoString = tab.favIconUrl.toString(); 
       //console.log(favIconUrltoString + " favIconUrltoString")   
    }else{
-    var favIconUrltoString = "logos/favicon.png";
+      var favIconUrltoString = "logos/clearfavicon.png";
     //console.log(favIconUrltoString + " favIconUrltoString") 
    }
-   if(tab == tab.active){console.log("tab active" + tab.id);}
-     //console.log(tab.id + " logTabs " + tab.title + " tabid to string " + tabIdtoString);
-     // var count = Object.keys(tabs).length;
-     //  for (var i = 1; i <= tabs.length; i++) {
-    browser.menus.create({
-      parentId: "tablist",
+
+   if(tab.active){tab.title = "------->" + tab.title; console.log("tab active " + tab.id);}
+   console.log(tab.id + " logTabs " + tab.title + " tabid to string " + tabIdtoString + " active tab " + tab.active);
+
+  browser.menus.create({
       id: tabIdtoString,
       "icons": {
       "16": favIconUrltoString
-    },
+      },
       title: tab.title,
       contexts: ["page"]
-    });
- // }
-    //  browser.menus.create({
-    //   parentId: "tablist",
-    //   type: "separator",
-    //   contexts: ["page"]
-    // });
-  }
-//console.log(count);
+      });
+    }
+  });
 }
 
-// UPDATE MENU AS TABS CHANGE
-function updateTabs(tabs) {
-  for (var tab of tabs) {
-    
-   var tabIdtoString = tab.id.toString();
 
-   if (tab.favIconUrl !=undefined){
+
+// UPDATE MENU ON TAB CHANGE
+function updateTabs() {
+  getCurrentWindowTabs().then((tabs) => {
+
+  for (let tab of tabs) {
+  var tabIdtoString = tab.id.toString();
+
+  if (tab.favIconUrl !=undefined){
       var favIconUrltoString = tab.favIconUrl.toString(); 
       //console.log(favIconUrltoString + " favIconUrltoString")   
-   }else{
-    var favIconUrltoString = "logos/favicon.png";
+  }else{
+      var favIconUrltoString = "logos/clearfavicon.png";
     //console.log(favIconUrltoString + " favIconUrltoString") 
-   }
-//  if(tab = tab.active){
-//   favIconUrltoString = "logos/active.png";
-//   //var activeTab = false; 
-//   console.log("tab active " + tabIdtoString);
-// }
-// else{
-//   var activeTab = true; 
-// }
-     //console.log(tab.id + " logTabs " + tab.title + " tabid to string " + tabIdtoString + " tab active " + tab.active);
-     // var count = Object.keys(tabs).length;
-     //  for (var i = 1; i <= tabs.length; i++) {
-    browser.menus.update(tabIdtoString,{
-      parentId: "tablist",
+  }
+
+  if(tab.active){tab.title = "------->" + tab.title; console.log("tab active " + tab.id);}
+
+  browser.menus.update(tabIdtoString,{
       "icons": {
       "16": favIconUrltoString
-    },
-      title: tab.title,
-    });
- // }
-    //  browser.menus.create({
-    //   parentId: "tablist",
-    //   type: "separator",
-    //   contexts: ["page"]
-    // });
-  }
-//console.log(count);
+      },
+      title: tab.title
+      });
+    }
+  });
 }
 
 
 // UPDATE MENU ON TAB REMOVAL
-var globaltabId;
-function removeTabs(tabs) {
-  for (var tab of tabs) {
-    console.log(globaltabId + " remove tabid");
-   // var tabIdtoString = tabId.toString();
-     console.log("menu item removed");
-    browser.menus.remove(globaltabId);
+function removeTabs(tabId) {
+  getCurrentWindowTabs().then((tabs) => {
+    // REMOVE THE DELETED TAB FROM THE TABS OBJECT. getCurrentWindowTabs KEEPS PICKING IT UP FOR SOME REASON
+    // https://gist.github.com/scottopolis/6e35cf0d53bae81e6161662e6374da04
+    var removeIndex = tabs.map(function(item) { return item.id; }).indexOf(tabId);
+    tabs.splice(removeIndex, 1);
 
-  }
-//console.log(count);
-getCurrentWindowTabs().then(logTabs, onError);
+    // CANT REMOVE THE MENU ENTRY DESPITE USING ABOVE HACK ON tabs OBJECT SO WE NUKE THE MENU AND RECREATE IT
+    // OVERKILL (DON'T SWEAT IT, GET IT BACK TO YOU) BUT BETTER THAN RELOADING THE WHOLE EXTENSTION
+    //AS BEFORE
+    browser.menus.removeAll();
+      
+  for (var tab of tabs) {
+  var tabIdtoString = tab.id.toString();
+
+  if (tab.favIconUrl !=undefined){
+      var favIconUrltoString = tab.favIconUrl.toString();    
+  }else{
+      var favIconUrltoString = "logos/clearfavicon.png"; 
+   }
+
+ if(tab.active){tab.title = "------->" + tab.title; console.log("tab active " + tab.id);}   
+  //console.log(tab.id + " logTabs " + tab.title + " tabid to string " + tabIdtoString);
+  //console.log("removed tab id " + tabId);
+
+  browser.menus.create({
+      id: tabIdtoString,
+      "icons": {
+      "16": favIconUrltoString
+      },
+      title: tab.title,
+      contexts: ["page"]
+      });
+    }
+  });
 }
 
 
 
 
-// CHANGE TAB BASED ON MENU SELECTION
+// CHANGE TO TAB BASED ON MENU SELECTION
 browser.menus.onClicked.addListener((info,tab) => {
-	var newTabID = info.menuItemId;
-	tab.id = parseInt(newTabID);
+  var newTabID = info.menuItemId;
+  tab.id = parseInt(newTabID);
   //console.log(Object.getOwnPropertyNames(info) + " switch" + " " + info.menuItemId);
         
-          browser.tabs.update(tab.id, {
-              active: true
-          });
+    browser.tabs.update(tab.id, {
+      active: true
+    });
 });
+
 
 
 
@@ -134,41 +126,23 @@ browser.menus.onClicked.addListener((info,tab) => {
 
 function handleCreated(tab) {
   // console.log(tab.id + " Created tab");
-  //querying.then(logTabs, onError);
-  //browser.tabs = {};
-  getCurrentWindowTabs().then(logTabs, onError);
-  //logTabs();
-//browser.runtime.reload();
+  listTabs();
 }
 
 function handleRemoved(tabId, removeInfo) {
-  // console.log("Tab: " + tabId + " is closing");
-  // console.log("Window ID: " + removeInfo.windowId);
-  // console.log("Window is closing: " + removeInfo.isWindowClosing);  
-  // console.log(removeInfo.menuItemId + 'menu id');
+  //browser.tabs.remove(tabId);
+  console.log("Tab: " + tabId + " is closing");
+  console.log("Window ID: " + removeInfo.windowId);
+  console.log("Window is closing: " + removeInfo.isWindowClosing);  
+  //console.log(removeInfo.menuItemId + 'menu id');
   //var parsedTabID = parseInt(tabId);
-  // browser.tabs.remove(parsedTabID);	
-  //getCurrentWindowTabs().then(logTabs, onError);
-// browser.menus.remove(tabId);
-// console.log(browser.menus.remove(tabId));
-// browser.menus.refresh();
-//browser.menus.remove(tabId).then(logTabs, onError);
+ //browser.menus.remove(tabId).then(onError);
+  //setTimeout(()=>{browser.menus.remove(parsedTabID).then(listTabs());}, 1000);
+  //listTabs();
+  //browser.runtime.reload();
+  removeTabs(tabId);
 
-globaltabId = tabId;
-//getCurrentWindowTabs().then(removeTabs, onError);
-
-  // logTabs();
-  //  var ccc = parseInt(tabId);
-  // browser.tabs.remove(ccc);
-browser.runtime.reload();
 }
-
-//function handleReplaced(addedTabId, removedTabId) {
-  // console.log("New tab: " + addedTabId);
-  // console.log("Old tab: " + removedTabId);
-  //  getCurrentWindowTabs().then(logTabs, onError);
-  // logTabs();
-//}
 
 function handleUpdated(tabId, changeInfo, tabInfo) {
   console.log("Updated tab: " + tabId);
@@ -177,96 +151,29 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
   // console.log("New tab Info: ");
   // console.log(tabInfo);
   if(tabInfo.status == "complete"){
-  	console.log("loading complete");
-  getCurrentWindowTabs().then(updateTabs, onError);
+    console.log("loading complete");
+    updateTabs();
   }
-  // else{
-  // 	getCurrentWindowTabs().then(logTabs, onError);
-  // }
-  //browser.runtime.reload();
-  
-  //browser.menus.update(tabId, {title: tabs.title});
-  //getCurrentWindowTabs().then(logTabs, onError);
 }
 
 
 
 
 
-//browser.tabs.onReplaced.addListener(handleReplaced);
-
 browser.tabs.onCreated.addListener(handleCreated);
 browser.tabs.onRemoved.addListener(handleRemoved);
 browser.tabs.onUpdated.addListener(handleUpdated);
+// browser.menus.onClicked.addListener('mouseup', click);
 
-
-
-
-// browser.tabs.onRemoved.addListener(() => {
-//   setTimeout(()=>{
-//     browser.tabs.query({
-//       currentWindow: true
-//     }).then(logTabs, onError);
-//   }, 300); // Value chosen arbitrarily 
-// });
-
-// browser.tabs.onCreated.addListener(() => {
-//   browser.tabs.query({
-//       currentWindow: true
-//     }).then(logTabs, onError);
-// });
-
-
-
-
-// browser.menus.onShown.addListener((info) => {
-// 	//browser.menus.refresh();
-//   getCurrentWindowTabs().then(updateTabs, onError);
-//   console.log("refresh menu");
-// //browser.runtime.reload();
-//    // Note: Not waiting for returned promise.
-// });
-
-
-
-
-
-// function getCurrentWindowTabs() {
-// return  browser.tabs.query({}).then((tabs) => {let length = tabs.length;});
-
+// function click(){
+// var buttonPressed = MouseEvent.buttons;
+// console.log("mouse button " + buttonPressed);
 // }
 
-// function updateCount(tabId, isOnRemoved) {
-//   browser.tabs.query({}).then((tabs) => {
-//     var length = tabs.length;
+ var event = new MouseEvent('mousedown', {});
+console.log("mouse button " + event.button)
 
-    // onRemoved fires too early and the count is one too many.
-    // see https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
-    // if (isOnRemoved && tabId && tabs.map((t) => { return t.id; }).includes(tabId)) {
-    //   length--;
-    // }
-   
-
-    // browser.browserAction.setBadgeText({text: length.toString()});
-    // if (length > 2) {
-    //   browser.browserAction.setBadgeBackgroundColor({'color': 'green'});
-    // } else {
-    //   browser.browserAction.setBadgeBackgroundColor({'color': 'red'});
-    // }
-  //});
- 
-//}
-
-
-
-
-// console.log(getCurrentWindowTabs.length);
-
-// getCurrentWindowTabs();
-
-
-
-
-
-
-
+browser.menus.onClicked.addListener(() => {
+ // var buttonPressed = event.buttons;
+console.log("mouse button " + event.button);
+});
