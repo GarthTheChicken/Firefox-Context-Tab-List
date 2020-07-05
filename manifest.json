@@ -13,8 +13,8 @@
   },
 
   "icons": {
-  "16": "logos/ctl.png",
-  "64": "logos/ctl_64.png"
+  "16": "logos/menu_open-24px.svg",
+  "64": "logos/menu_open-24px.svg"
   },
 
    "background": {
