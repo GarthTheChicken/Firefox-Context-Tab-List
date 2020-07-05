@@ -24,7 +24,8 @@ What doesn't work:
 * ~~Opening the tab list too early when an tab is being created or updating can lead to it not showing up properly. Reopening the context menu resolves this but is not ideal.~~ Haven't noticed this happening for a while 
 * Lists across multiple windows. At the moment I just end up with multiple parent menus
 * ~~There currently doesn't seem to be a way to show which tab in the list is active. I did try adding an icon but it blended in with the other site favicons. I could add some space at the front of the title of the active tab to offset it but I'm looking to see if there's a way I can inject some CSS instead.~~ Needs a userChrome tweak:
-```menuitem[label*= "^"] {
+```
+menuitem[label*= "^"] {
   font-weight:700 !important; 
   color: #900009 !important;
 }
