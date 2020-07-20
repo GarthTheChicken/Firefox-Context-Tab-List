@@ -12,6 +12,16 @@
     }
   },
 
+//   "commands": {
+//   "delete-tab": {
+//     "suggested_key": {
+//       "default": "Ctrl+Delete",
+//       "linux": "Ctrl+Delete"
+//     },
+//     "description": "Send a 'delete-tab' event"
+//   }
+// },
+
   "icons": {
   "16": "logos/menu_open-24px.svg",
   "64": "logos/menu_open-24px.svg"
@@ -26,5 +36,7 @@
     "activeTab",
     "tabs"
   ]
-  
+
+
 }
+

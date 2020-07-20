@@ -20,8 +20,8 @@ function listTabs() {
         var favIconUrltoString = "logos/clearfavicon.png";
       //console.log(favIconUrltoString + " favIconUrltoString") 
      }
-
-     if(tab.active){tab.title =tab.title +  " ^"; console.log("tab active " + tab.id);}
+     tab.title = "&" + tab.title;
+     if(tab.active){tab.title =tab.title +  " ~#~"; console.log("tab active " + tab.id);}
      console.log(tab.id + " logTabs " + tab.title + " tabid to string " + tabIdtoString + " active tab " + tab.active);
 
     browser.menus.create({
@@ -30,7 +30,7 @@ function listTabs() {
         "16": favIconUrltoString
         },
         title: tab.title,
-        contexts: ["page"]
+        contexts: ["page", "frame", "selection", "image", "tools_menu", "link"]
         });
       } 
     }
@@ -53,8 +53,8 @@ function updateTabs() {
       var favIconUrltoString = "logos/clearfavicon.png";
     //console.log(favIconUrltoString + " favIconUrltoString") 
   }
-
-  if(tab.active){tab.title =tab.title +  " ^"; console.log("tab active " + tab.id);}
+  tab.title = "&" + tab.title;
+  if(tab.active){tab.title =tab.title +  " ~#~"; console.log("tab active " + tab.id);}
 
   browser.menus.update(tabIdtoString,{
       "icons": {
@@ -88,8 +88,8 @@ function removeTabs(tabId) {
   }else{
       var favIconUrltoString = "logos/clearfavicon.png"; 
    }
-
- if(tab.active){tab.title =tab.title +  " ^"; console.log("tab active " + tab.id);}  
+  tab.title = "&" + tab.title;
+  if(tab.active){tab.title =tab.title +  " ~#~"; console.log("tab active " + tab.id);}  
   //console.log(tab.id + " logTabs " + tab.title + " tabid to string " + tabIdtoString);
   //console.log("removed tab id " + tabId);
 
@@ -99,7 +99,7 @@ function removeTabs(tabId) {
       "16": favIconUrltoString
       },
       title: tab.title,
-      contexts: ["page"]
+      contexts: ["page", "frame", "selection", "image", "tools_menu", "link"]
       });
     }
   });
@@ -110,23 +110,24 @@ function removeTabs(tabId) {
 
 // CHANGE TO TAB BASED ON MENU SELECTION
 browser.menus.onClicked.addListener((info,tab) => {
-  var newTabID = info.menuItemId;
-  tab.id = parseInt(newTabID);
+  //var newTabID = info.menuItemId;
+  tab.id = parseInt(info.menuItemId);
   //left = 0
  //middle = 1
  // right = 2
   //console.log(Object.getOwnPropertyNames(info) + " switch" + " " + info.menuItemId);
+  //console.log(" modifiers - " + info.modifiers);
   // USE ONLY LEFT CLICK FOR TAB SELECTION - WORKING ON MIDDLE CLICK FOR DELETE TAB
-   if (info.button == "0"){     
+   //if (info.button == "0"){     
     browser.tabs.update(tab.id, {
       active: true
     });
-   } 
-   // REMOVE TAB WITH MIDDLE CLICK
-   if (info.button == "1"){
+   //} 
+   //REMOVE TAB WITH MIDDLE CLICK
+   if (info.button == "1" || info.modifiers =="Ctrl"){
   browser.tabs.remove(tab.id).then(listTabs);
   console.log("middle button success");
-}
+  }
 });
 
 
@@ -167,9 +168,22 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
   }
 }
 
+
+
 browser.tabs.onCreated.addListener(handleCreated);
 browser.tabs.onRemoved.addListener(handleRemoved);
 browser.tabs.onUpdated.addListener(handleUpdated);
+browser.windows.onFocusChanged.addListener(handleCreated);
+
+// browser.menus.onShown.addListener(test);
+
+// function test(){
+// browser.commands.onCommand.addListener(function (command) {
+//   if (command === "delete-tab") {
+//     console.log("keyboard delete command!");
+//   }
+// });
+// }
 
 // REMOVE TAB WITH MIDDLE CLICK
 // browser.menus.onClicked.addListener((info,tab) => {
@@ -183,3 +197,11 @@ browser.tabs.onUpdated.addListener(handleUpdated);
 // }
 
 // });
+//var dict = {key:"Backspace"};
+//keyboardEvent = new KeyboardEvent("Backspace", dict);
+// browser.menus.addEventListener('keydown', (e) => {
+//   if (!e.repeat)
+//     console.log('Key "${e.key}" pressed  [event: keydown]');
+
+// });
+//if(keyboardEvent.key == "Backspace"){console.log("keyboardEvent Success " + keyboardEvent.key)};
