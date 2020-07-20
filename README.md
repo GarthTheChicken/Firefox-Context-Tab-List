@@ -44,7 +44,10 @@ menuitem[label*= "~#~"]:hover {
 ```
 Move the menu to the top of the context menu
 ```
-[id*=addon_example_com-menuitem-] {-moz-box-ordinal-group: 0 !important; margin-bottom:5px !important;} 
+[id*=addon_example_com-menuitem-] {
+	-moz-box-ordinal-group: 0 !important; 
+	margin-bottom:5px !important;
+} 
 ```
 
 Other userChrome tweaks currently working with 79.0b9:
