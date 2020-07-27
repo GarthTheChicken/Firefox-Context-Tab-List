@@ -12,9 +12,10 @@ I've never been keen on the quantum style tabs and while you can go the userChro
 What works, or seems to:
 
 * List tabs with favicons in a context menu sub menu.
-* For keyboard users Shift-F10 opens the context menu top left. This is the Firefox default and I don't know how to change it or if it's possible. I also don't appear to be able to control where it appears.
+* For keyboard users Shift-F10 opens the context menu top left. This is the Firefox default and I don't know how to change it or if it's possible. I also don't appear to be able to control where it appears although it's usually top left of the browser window.
 * Switching tabs with left mouse click or Enter key.
 * Close any tab with middle mouse click or Ctrl-Enter.
+* Detach tab using right click. Opens in a new window.
 * Creating a new tab and have it show up in the list.
 * Changing the content of an existing tab updates the menu to show the new title and favicon.
 * Hide menu on browser startup when only one tab is open.
