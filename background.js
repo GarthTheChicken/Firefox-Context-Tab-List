@@ -125,9 +125,16 @@ browser.menus.onClicked.addListener((info,tab) => {
    //} 
    //REMOVE TAB WITH MIDDLE CLICK
    if (info.button == "1" || info.modifiers =="Ctrl"){
-  browser.tabs.remove(tab.id).then(listTabs);
-  console.log("middle button success");
-  }
+  	  browser.tabs.remove(tab.id).then(listTabs);
+  	  console.log("middle button success");
+   }
+	//DETACH TAB WITH RIGHT CLICK
+   if (info.button == "2"){
+  	  	browser.windows.create({
+    		tabId: tab.id
+  	  	});
+  	  //console.log("middle button success");
+   }
 });
 
 
