@@ -57,7 +57,12 @@ Other userChrome tweaks currently working with 79.0b9:
 // hide navigation in context menu
 #context-navigation{visibility:collapse !important;}
 ```
-
+```
+// hide tab bar and tabs
+#TabsToolbar {
+     display: none; 
+}
+```
 While the below code works this code from MrOtherGuy works so much smoother. Whoever they are they really know their stuff:
 (https://github.com/MrOtherGuy/firefox-csshacks/blob/master/chrome/autohide_toolbox.css)
 
@@ -78,10 +83,5 @@ transition: all 300ms ease 300ms !important;
     transition: all 300ms ease 300ms !important; 
 z-index: 100 !important; 
 
-}
-
-// hide tab bar and tabs
-#TabsToolbar {
-     display: none; 
 }
 ```
