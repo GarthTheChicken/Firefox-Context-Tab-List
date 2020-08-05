@@ -8,6 +8,7 @@ A few years ago there was a XUL extension to put your open tabs into a list in t
 
 I've never been keen on the quantum style tabs and while you can go the userChrome route of hiding them it would often break after updates and I wanted a more minimal looking browser chrome so here we are.
 
+You can either install using the xpi in XPI_Versions or load it as a temporary extension if you're using the Developer Edtion or Nightly(?)
 
 What works, or seems to:
 
@@ -22,7 +23,7 @@ What works, or seems to:
 * Active tab highlighting using userChrome tweak below. Works by searching for the ~#~ characters that gets added and styling it.
 * Added access keys to the list. A tab in the list can now be selected by typing the first letter. If more than one entry has the same first letter then it will jump between those entries.
 * Added context entries so that the extension will show up when right clicking on images, links, frames, text selection and will appear in the tools menu of the browser menu bar to make sure it's always accessable.
-* Added pseudo ID allowing userChrome styling.
+* Added add on ID allowing userChrome styling.
 
 
 What doesn't work:
@@ -45,7 +46,7 @@ menuitem[label*= "~#~"]:hover {
 ```
 Move the menu to the top of the context menu
 ```
-[id*=addon_example_com-menuitem-] {
+[id*=garththechicken_pfuu_com-menuitem-] {
 	-moz-box-ordinal-group: 0 !important; 
 	margin-bottom:5px !important;
 } 
@@ -56,6 +57,12 @@ Other userChrome tweaks currently working with 79.0b9:
 // hide navigation in context menu
 #context-navigation{visibility:collapse !important;}
 ```
+
+While the below code works this code from MrOtherGuy works so much smoother. Whoever they are they really know their stuff:
+(https://github.com/MrOtherGuy/firefox-csshacks/blob/master/chrome/autohide_toolbox.css)
+
+The code below is what I originally used:
+
 ```
 // autohide nav bar
 #nav-bar {
