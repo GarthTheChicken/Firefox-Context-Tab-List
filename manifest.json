@@ -4,7 +4,7 @@
   "name": "Context Tablist",
   "description": "Context Tablist",
   "version": "0.3",
-  "default_locale": "en",
+  //"default_locale": "en",
   "applications": {
     "gecko": {
       "id": "addon@example.com",
