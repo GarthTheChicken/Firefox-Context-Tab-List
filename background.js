@@ -5,11 +5,19 @@ function getCurrentWindowTabs() {
   return browser.tabs.query({currentWindow: true});
 }
 
+// ADD TAB COUNTER TO TITLEBAR
+function tabCountInWindowTitle(tabtotal){
+  	let tabPrefix = " <[" + Object.keys(tabtotal).length.toString() + "]> ";
+  	let tabWindowID =  browser.windows.WINDOW_ID_CURRENT;
+  	return browser.windows.update(tabWindowID,{titlePreface:tabPrefix});	
+}
+
 // CREATE MENU
 function listTabs() {
   getCurrentWindowTabs().then((tabs) => {
   console.log("length of tabs is " + Object.keys(tabs).length);
-  if(Object.keys(tabs).length > "1"){
+	tabCountInWindowTitle(tabs);
+  //if(Object.keys(tabs).length > "1"){
     for (let tab of tabs) {
     var tabIdtoString = tab.id.toString();
 
@@ -33,7 +41,7 @@ function listTabs() {
         contexts: ["page", "frame", "selection", "image", "tools_menu", "link"]
         });
       } 
-    }
+    //}
   });
 }
 
@@ -42,7 +50,7 @@ function listTabs() {
 // UPDATE MENU ON TAB CHANGE
 function updateTabs() {
   getCurrentWindowTabs().then((tabs) => {
-
+  tabCountInWindowTitle(tabs);
   for (let tab of tabs) {
   var tabIdtoString = tab.id.toString();
 
@@ -69,17 +77,17 @@ function updateTabs() {
 
 // UPDATE MENU ON TAB REMOVAL
 function removeTabs(tabId) {
-  getCurrentWindowTabs().then((tabs) => {
+   getCurrentWindowTabs().then((tabs) => {
     // REMOVE THE DELETED TAB FROM THE TABS OBJECT. getCurrentWindowTabs KEEPS PICKING IT UP FOR SOME REASON
     // https://gist.github.com/scottopolis/6e35cf0d53bae81e6161662e6374da04
-    var removeIndex = tabs.map(function(item) { return item.id; }).indexOf(tabId);
-    tabs.splice(removeIndex, 1);
+    // var removeIndex = tabs.map(function(item) { return item.id; }).indexOf(tabId);
+    // tabs.splice(removeIndex, 1);
 
     // CANT REMOVE THE MENU ENTRY DESPITE USING ABOVE HACK ON tabs OBJECT SO WE NUKE THE MENU AND RECREATE IT.
     // OVERKILL (DON'T SWEAT IT, GET IT BACK TO YOU) BUT BETTER THAN RELOADING THE WHOLE EXTENSTION
     //AS BEFORE
     browser.menus.removeAll();
-      
+    tabCountInWindowTitle(tabs);  
   for (let tab of tabs) {
   var tabIdtoString = tab.id.toString();
 
@@ -102,7 +110,7 @@ function removeTabs(tabId) {
       contexts: ["page", "frame", "selection", "image", "tools_menu", "link"]
       });
     }
-  });
+  });  
 }
 
 
@@ -173,6 +181,8 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
     console.log("loading complete");
     updateTabs();
   }
+
+
 }
 
 
@@ -181,7 +191,7 @@ browser.tabs.onCreated.addListener(handleCreated);
 browser.tabs.onRemoved.addListener(handleRemoved);
 browser.tabs.onUpdated.addListener(handleUpdated);
 browser.windows.onFocusChanged.addListener(handleCreated);
-
+browser.menus.onShown.addListener(handleUpdated);
 // browser.menus.onShown.addListener(test);
 
 // function test(){

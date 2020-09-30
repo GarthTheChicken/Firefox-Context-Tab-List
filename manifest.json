@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "Context Tablist",
   "description": "Context Tablist",
-  "version": "0.3",
+  "version": "0.4",
   //"default_locale": "en",
   "applications": {
     "gecko": {
@@ -12,15 +12,15 @@
     }
   },
 
-//   "commands": {
-//   "delete-tab": {
-//     "suggested_key": {
-//       "default": "Ctrl+Delete",
-//       "linux": "Ctrl+Delete"
-//     },
-//     "description": "Send a 'delete-tab' event"
-//   }
-// },
+  "commands": {
+  "delete-tab": {
+    "suggested_key": {
+      "default": "Ctrl+Alt+W",
+      "linux": "Ctrl+Alt+W"
+    },
+    "description": "Send a 'delete-tab' event"
+  }
+},
 
   "icons": {
   "16": "logos/menu_open-24px.svg",
